@@ -1,0 +1,174 @@
+import math
+import winsound
+from tkinter import *
+from tkinter import ttk
+
+import time
+import datetime
+
+window = Tk()
+width = 1000
+height = 1000
+
+def sound():
+    
+    winsound.PlaySound('mixer.wav', winsound.SND_FILENAME)
+         
+         
+
+window.geometry("1000x1000")
+canvas_width, canvas_height = width - 5, height - 5
+canvas1 = Canvas(window, height=canvas_width, width=canvas_height, bg='white')
+canvas1.place(x=100, y=100)
+oval_shape = canvas1.create_oval(10, 10, 390, 390, width=20, outline='black', fill='white')
+radius1 = 280
+x1 = 200
+y1 = 200
+
+radius3 = 50
+radius2 = 200
+radius1 = 130
+radius_of_second = 110
+radius_of_hour = 90
+radius_of_minute = 100
+
+hours = iter(['12', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'])
+
+indegree = 0
+
+
+for i in range(0, 60):
+    inradians = math.radians(indegree)
+
+    if i % 5 == 0:
+
+        ratio = 0.7
+        texx = x1 + radius1 * math.sin(inradians)
+        texy = y1 - radius1 * math.cos(inradians)
+        canvas1.create_text(texx, texy, text=next(hours), fill='black')
+
+    else:
+        ratio = 0.8
+    x = x1 + radius2 * ratio * math.sin(inradians)
+    y = y1 - radius2 * ratio * math.cos(inradians)
+    x2 = x1 + radius2 * math.sin(inradians)
+    y2 = y1 - radius2 * math.cos(inradians)
+    line = canvas1.create_line(x, y, x2, y2, width=1)
+    indegree += 6
+
+
+second_line = canvas1.create_line(x1, y1, x1+110, y2+110, arrow='last', fill='blue', width=6)
+minute_line=canvas1.create_line(x1,y1,x1+110,y2+110, fill='red',width=4)
+hour_line=canvas1.create_line(x1,y1,x1+90,y2+90, fill='black',width=3)
+
+
+def update_clock():
+    current_second =time.strftime("%S")
+    current_minute =time.strftime("%M")
+    current_hour = time.strftime("%I")
+    
+    current_date= time.strftime("%d")
+    current_month =time.strftime("%m")
+    current_year = time.strftime("%Y")
+   
+    
+    # Convert current time to angles
+    indegreesecond = int(current_second) * 6
+    indegreeminute = int(current_minute) * 6
+    indegreehour = int(current_hour) * 30+(indegreeminute*0.083333)
+    minute_x = radius_of_minute * math.sin(math.radians(indegreeminute)) + x1
+    minute_y = -1 * radius_of_minute * math.cos(math.radians(indegreeminute)) + y1
+    hour_x = radius_of_hour * math.sin(math.radians(indegreehour)) + x1
+    canvas1.coords(minute_line,x1,y1,minute_x,minute_y)
+    hour_y = -1 * radius_of_hour * math.cos(math.radians(indegreehour)) + y1
+
+
+    canvas1.coords(hour_line,x1,y1,hour_x,hour_y)
+    second_x=second_line*math.sin(math.radians(indegreesecond))+x1
+    second_y=-1*second_line*math.cos(math.radians(indegreesecond))+y1
+    canvas1.coords(second_line,x1,y1,second_x,second_y)
+    window.after(1000,update_clock)
+update_clock()
+def stop():
+    time_session=60
+    difference=time.time()-start_time
+    if difference>time_session:
+       winsound.PlaySound(None, winsound.SND_PURGE)
+def stop_forbutton():
+    winsound.PlaySound(None, winsound.SND_PURGE)
+
+
+def alarm( ):
+      time=1
+      a=Label(window,text='you set the alarm')
+      a.place(x=720,y=730)
+      while time!=0:
+      
+            
+           
+           now = datetime.datetime.now()
+           hour1 = now.strftime('%I')
+           minute1 = now.strftime('%M')
+           second1 = now.strftime('%S')
+           period = now.strftime('%p')
+           if   hour1==hour_choice.get() and minute1==minute_choice.get() and period==pmoram_choice.get():
+                        start_time=time.time()
+                        sound()
+                        time=0
+      
+
+                        
+      
+        
+                
+                   
+                   
+# a=str(entry.get())
+def digital():
+    
+    current_second =time.strftime("%S")
+    current_minute =time.strftime("%M")
+    current_hour = time.strftime("%I")
+    amorpm=time.strftime("%p")
+    digital_time=Label(window,text=f'{current_hour}:{current_minute}:{current_second}:{amorpm}',fg='black',font=("calibri",30),bg='red',width=15)
+    digital_time.place(x=700,y=300)
+    window.after(1000,digital)
+
+# now=datetime.datetime.now()
+digital()
+# hour=Combobox(window)
+# hour['values']=(1,2,3,4,5,6,7,8,9,10,11,12)
+text_alarm=Label(window, text='alarm',font='IVY 18 bold',fg='black',bg='brown')
+text_alarm.place(x=450,y=500)
+
+hour_text=Label(window,text='hour',font='IVY 16 bold',fg='black',bg='grey')
+hour_text.place(x=460,y=550)
+minute_text=Label(window,text='minute',font='IVY 17 bold ',fg='black',bg='blue')
+minute_text.place(x=550,y=550)
+hour_choice=ttk.Combobox(window,width=3)  
+hour_choice['values']=('01','02','03','04','05','06','07','08','09','10','11','12')
+hour_choice.current(0)        
+hour_choice.place(x=470,y=590)
+minute_choice=ttk.Combobox(window,width=5)
+minute_choice['values']=('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30',
+'31','32','33','34','35','36','37','38','39','40','41','42','43','45','46','47','49','50','51','52','53','54','55','56','57','58','59')
+minute_choice.current(0)
+minute_choice.place(x=555,y=590)
+pmoram_text=Label(window,text='pm or am',font='IVY 18 bold',fg='black',bg='grey')
+pmoram_text.place(x=650,y=550)
+pmoram_choice=ttk.Combobox(window,width=5)
+pmoram_choice['values']=('PM','AM')
+pmoram_choice.current(0)
+pmoram_choice.place(x=650,y=590)
+setting_alarm=Button(window,text='set alarm',font='IVY 18 bold',fg='black',command=alarm)
+setting_alarm.place(x=680,y=700)
+setting_stop=Button(window,text='stop alarm sound',font='IVY 18 bold',fg='black',command=stop_forbutton)
+setting_stop.place(x=200,y=700)
+
+
+window.resizable(False,False)
+
+    
+
+
+window.mainloop()
