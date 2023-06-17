@@ -11,12 +11,10 @@ width = 1000
 height = 1000
 
 def sound():
-    
     winsound.PlaySound('mixer.wav', winsound.SND_FILENAME)
          
          
-
-window.geometry("1000x1000")
+window.geometry("1200x650")
 canvas_width, canvas_height = width - 5, height - 5
 canvas1 = Canvas(window, height=canvas_width, width=canvas_height, bg='white')
 canvas1.place(x=100, y=100)
